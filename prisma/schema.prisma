@@ -1,0 +1,55 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Chapter {
+  id          String   @id @default(cuid())
+  title       String
+  order       Int
+  category    String   @default("Uncategorized") // "计网 I", "计网 II", "专题"
+  externalLink String? // URL to external resource
+  topics      Topic[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Topic {
+  id          String     @id @default(cuid())
+  title       String
+  summary     String     // Markdown content
+  chapterId   String
+  chapter     Chapter    @relation(fields: [chapterId], references: [id])
+  questions   Question[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Question {
+  id            String   @id @default(cuid())
+  content       String   // The question text
+  type          String   // MCQ, TF, FILL, OPEN
+  options       String?  // JSON string for options (e.g. ["A", "B", "C", "D"])
+  correctAnswer String   // The correct answer value
+  explanation   String?  // Explanation for the answer
+  difficulty    String   // EASY, MEDIUM, HARD
+  topicId       String
+  topic         Topic    @relation(fields: [topicId], references: [id])
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
