@@ -22,13 +22,24 @@ export default async function LearnPage() {
 
     return (
         <div className="p-8 md:p-12 max-w-7xl mx-auto">
-            <div className="mb-12 text-center">
+            <div className="mb-12 text-center relative">
                 <div className="inline-block p-3 rounded-full bg-retro-green/10 mb-4">
-                    <Book className="w-8 h-8 text-retro-green" />
+                    <BookOpen className="w-8 h-8 text-retro-green" />
                 </div>
-                <h1 className="text-4xl md:text-5xl font-serif font-bold text-retro-ink mb-4">Learning Modules</h1>
+                <div className="relative inline-block">
+                    <h1 className="text-4xl md:text-5xl font-serif font-bold text-retro-ink mb-4">Learning Modules</h1>
+                    {/* Chopper Decoration */}
+                    <div className="absolute -right-20 -top-10 w-24 h-24 hidden md:block animate-float" style={{ animationDelay: '0.5s' }}>
+                        <Image
+                            src="/chopper-candy.png"
+                            alt="Chopper eating candy"
+                            fill
+                            className="object-contain rotate-12 drop-shadow-md"
+                        />
+                    </div>
+                </div>
                 <p className="text-xl text-retro-ink/60 font-serif italic">
-                    "Knowledge is the routing table of life."
+                    "The journey of a thousand miles begins with a single step."
                 </p>
             </div>
 

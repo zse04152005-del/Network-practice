@@ -16,26 +16,28 @@ export default function Home() {
         {/* Hero Image Container with Floating Widgets */}
         <div className="relative w-full max-w-4xl mx-auto flex justify-center items-center h-[400px]">
 
-          {/* Left Floating Decoration - Chopper */}
+          {/* Left Floating Decoration - Holographic Data Cube */}
           <div className="absolute left-4 md:left-20 top-1/3 hidden md:block animate-float" style={{ animationDelay: '1s' }}>
-            <div className="relative w-32 h-32 hover:scale-110 transition-transform duration-300 cursor-pointer">
+            <div className="relative w-32 h-32 hover:scale-110 transition-transform duration-300 cursor-pointer group">
+              <div className="absolute inset-0 bg-cyan-500/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               <Image
-                src="/chopper.png"
-                alt="Tony Tony Chopper"
+                src="/net-cube.png"
+                alt="Holographic Network Node"
                 fill
-                className="object-contain drop-shadow-lg"
+                className="object-contain drop-shadow-[0_0_15px_rgba(0,255,255,0.3)]"
               />
             </div>
           </div>
 
-          {/* Right Floating Decoration - Devil Fruit */}
+          {/* Right Floating Decoration - Retro Signal Booster */}
           <div className="absolute right-4 md:right-20 top-1/4 hidden md:block animate-float" style={{ animationDelay: '2s' }}>
-            <div className="relative w-28 h-28 hover:rotate-12 transition-transform duration-300 cursor-pointer">
+            <div className="relative w-28 h-28 hover:rotate-12 transition-transform duration-300 cursor-pointer group">
+              <div className="absolute inset-0 bg-orange-500/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               <Image
-                src="/devil-fruit.png"
-                alt="Gum-Gum Fruit"
+                src="/net-booster.png"
+                alt="Retro Signal Booster"
                 fill
-                className="object-contain drop-shadow-lg"
+                className="object-contain drop-shadow-[0_0_15px_rgba(255,165,0,0.3)]"
               />
             </div>
           </div>

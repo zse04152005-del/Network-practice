@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, Trophy, Target } from "lucide-react";
 
 export default async function PracticePage() {
@@ -26,11 +27,22 @@ export default async function PracticePage() {
 
     return (
         <div className="p-8 md:p-12 max-w-7xl mx-auto">
-            <div className="mb-12 text-center">
+            <div className="mb-12 text-center relative">
                 <div className="inline-block p-3 rounded-full bg-retro-red/10 mb-4">
                     <Trophy className="w-8 h-8 text-retro-red" />
                 </div>
-                <h1 className="text-4xl md:text-5xl font-serif font-bold text-retro-ink mb-4">Practice Arena</h1>
+                <div className="relative inline-block">
+                    <h1 className="text-4xl md:text-5xl font-serif font-bold text-retro-ink mb-4">Practice Arena</h1>
+                    {/* Kid Luffy Decoration */}
+                    <div className="absolute -right-24 -top-8 w-24 h-24 hidden md:block animate-float" style={{ animationDelay: '0.8s' }}>
+                        <Image
+                            src="/kid-luffy.png"
+                            alt="Kid Luffy"
+                            fill
+                            className="object-contain -rotate-12 drop-shadow-md"
+                        />
+                    </div>
+                </div>
                 <p className="text-xl text-retro-ink/60 font-serif italic">
                     "Repetition is the mother of learning."
                 </p>
