@@ -1,63 +1,95 @@
 import Link from "next/link";
-import { ArrowRight, BookOpen, CheckSquare, FileText } from "lucide-react";
+import { ArrowRight, BookOpen, GraduationCap, Trophy } from "lucide-react";
 
 export default function Home() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-[80vh] text-center p-6">
-      <h1 className="text-5xl font-bold mb-10 bg-gradient-to-r from-blue-600 to-violet-600 text-transparent bg-clip-text">
-        Computer Networks
-      </h1>
+    <div className="min-h-screen p-8 md:p-12 max-w-7xl mx-auto space-y-16">
+      {/* Hero Section */}
+      <section className="relative py-20 md:py-32 flex flex-col items-center text-center space-y-8 animate-slide-in">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-retro-yellow rounded-full blur-[100px] opacity-20 -z-10 animate-float"></div>
 
-      <div className="grid md:grid-cols-3 gap-6 max-w-4xl w-full">
-        <Link
-          href="/learn"
-          className="group p-6 bg-white rounded-xl shadow-sm border hover:shadow-md transition flex flex-col items-center"
-        >
-          <div className="h-12 w-12 bg-violet-100 text-violet-600 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition">
-            <BookOpen className="h-6 w-6" />
-          </div>
-          <h3 className="text-lg font-semibold mb-2">Learn Concepts</h3>
-          <p className="text-gray-500 text-sm">
-            Chapter-wise summaries and key concepts explained.
-          </p>
-        </Link>
+        <div className="inline-block border-b-2 border-retro-red pb-1 mb-4">
+          <span className="font-serif italic text-retro-red text-xl">Est. 2024</span>
+        </div>
 
-        <Link
-          href="/practice"
-          className="group p-6 bg-white rounded-xl shadow-sm border hover:shadow-md transition flex flex-col items-center"
-        >
-          <div className="h-12 w-12 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition">
-            <CheckSquare className="h-6 w-6" />
-          </div>
-          <h3 className="text-lg font-semibold mb-2">Practice Questions</h3>
-          <p className="text-gray-500 text-sm">
-            Test your understanding with topic-specific questions.
-          </p>
-        </Link>
+        <h1 className="text-6xl md:text-8xl font-serif font-bold text-retro-ink leading-tight tracking-tight">
+          Master the <br />
+          <span className="text-retro-blue relative inline-block">
+            Network
+            <svg className="absolute w-full h-3 -bottom-1 left-0 text-retro-yellow opacity-60" viewBox="0 0 100 10" preserveAspectRatio="none">
+              <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="8" fill="none" />
+            </svg>
+          </span>
+        </h1>
 
-        <Link
-          href="/exam"
-          className="group p-6 bg-white rounded-xl shadow-sm border hover:shadow-md transition flex flex-col items-center"
-        >
-          <div className="h-12 w-12 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition">
-            <FileText className="h-6 w-6" />
-          </div>
-          <h3 className="text-lg font-semibold mb-2">Mock Exam</h3>
-          <p className="text-gray-500 text-sm">
-            Simulate real exams with timed random questions.
-          </p>
-        </Link>
-      </div>
+        <p className="text-xl md:text-2xl text-retro-ink/80 max-w-2xl font-sans leading-relaxed">
+          Embark on a journey through the layers of the internet. From physical cables to application protocols.
+        </p>
 
-      <div className="mt-12">
-        <Link
-          href="/learn"
-          className="px-8 py-4 bg-gray-900 text-white rounded-full font-medium hover:bg-gray-800 transition flex items-center"
-        >
-          Start Learning Now
-          <ArrowRight className="ml-2 h-5 w-5" />
-        </Link>
-      </div>
+        <div className="flex flex-col sm:flex-row gap-6 pt-8">
+          <Link href="/learn" className="group relative inline-flex items-center justify-center px-8 py-4 font-bold text-white transition-all duration-200 bg-retro-red font-serif rounded-lg hover:bg-retro-red/90 focus:outline-none ring-offset-2 focus:ring-2 ring-retro-red retro-border">
+            Start Learning
+            <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+          </Link>
+          <Link href="/practice" className="group relative inline-flex items-center justify-center px-8 py-4 font-bold text-retro-ink transition-all duration-200 bg-transparent border-2 border-retro-ink font-serif rounded-lg hover:bg-retro-ink hover:text-white focus:outline-none ring-offset-2 focus:ring-2 ring-retro-ink">
+            Practice Now
+          </Link>
+        </div>
+      </section>
+
+      {/* Features Grid */}
+      <section className="grid md:grid-cols-3 gap-8">
+        {[
+          {
+            title: "Structured Learning",
+            desc: "Comprehensive chapters covering the entire TCP/IP stack.",
+            icon: BookOpen,
+            href: "/learn",
+            color: "text-retro-green",
+            bg: "bg-retro-green/10"
+          },
+          {
+            title: "Targeted Practice",
+            desc: "Hundreds of questions to test your knowledge at every layer.",
+            icon: Trophy,
+            href: "/practice",
+            color: "text-retro-red",
+            bg: "bg-retro-red/10"
+          },
+          {
+            title: "Mock Exams",
+            desc: "Simulate real exam conditions to build confidence.",
+            icon: GraduationCap,
+            href: "/exam",
+            color: "text-retro-blue",
+            bg: "bg-retro-blue/10"
+          }
+        ].map((item, i) => (
+          <Link
+            key={i}
+            href={item.href}
+            className="group retro-card p-8 flex flex-col items-start space-y-4 hover:bg-white relative overflow-hidden"
+          >
+            <div className={`p-4 rounded-full ${item.bg} ${item.color} mb-2 group-hover:scale-110 transition-transform duration-300`}>
+              <item.icon className="w-8 h-8" />
+            </div>
+            <h3 className="text-2xl font-bold text-retro-ink group-hover:text-retro-accent transition-colors">{item.title}</h3>
+            <p className="text-retro-ink/70 leading-relaxed">{item.desc}</p>
+
+            <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity transform translate-x-4 group-hover:translate-x-0">
+              <ArrowRight className="w-6 h-6 text-retro-ink/40" />
+            </div>
+          </Link>
+        ))}
+      </section>
+
+      {/* Footer / Quote */}
+      <section className="py-16 text-center border-t-2 border-retro-ink/10">
+        <blockquote className="font-serif text-3xl md:text-4xl italic text-retro-ink/60">
+          "The internet is the first thing that humanity has built that humanity doesn't understand, the largest experiment in anarchy that we have ever had."
+        </blockquote>
+        <cite className="block mt-4 text-retro-ink/40 font-sans not-italic uppercase tracking-widest text-sm">- Eric Schmidt</cite>
+      </section>
     </div>
   );
 }

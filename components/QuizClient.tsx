@@ -1,223 +1,168 @@
 "use client";
 
-import { useState } from "react";
-import { ChevronLeft, CheckCircle, XCircle, RefreshCcw, ArrowRight, LayoutGrid } from "lucide-react";
-import Link from "next/link";
+import { useState, useEffect } from "react";
+import { ArrowRight, CheckCircle, XCircle, Trophy } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface Question {
     id: string;
     content: string;
-    type: string;
+    type: "MCQ" | "TF" | "FIB";
     options: string | null;
     correctAnswer: string;
-    explanation: string | null;
+    explanation: string;
     difficulty: string;
 }
 
 interface QuizClientProps {
-    chapterTitle: string;
     questions: Question[];
-    mode?: "practice" | "exam";
+    mode: "practice" | "exam";
 }
 
-export const QuizClient = ({ chapterTitle, questions, mode = "practice" }: QuizClientProps) => {
+export default function QuizClient({ questions, mode }: QuizClientProps) {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
-    // For exam mode, we need to store all answers
-    const [examAnswers, setExamAnswers] = useState<Record<string, string>>({});
-
     const [isSubmitted, setIsSubmitted] = useState(false);
-    const [score, setScore] = useState(0);
-    const [showResult, setShowResult] = useState(false);
     const [showExplanation, setShowExplanation] = useState(false);
-
+    const [score, setScore] = useState(0);
+    const [examAnswers, setExamAnswers] = useState<Record<string, string>>({});
+    const [isExamFinished, setIsExamFinished] = useState(false);
     const [showNavigator, setShowNavigator] = useState(false);
 
-    const handleJumpToQuestion = (index: number) => {
-        setCurrentQuestionIndex(index);
+    // Reset state when question changes
+    useEffect(() => {
         setSelectedAnswer(null);
         setIsSubmitted(false);
         setShowExplanation(false);
-        setShowNavigator(false);
-    };
+    }, [currentQuestionIndex]);
 
     const currentQuestion = questions[currentQuestionIndex];
     const isLastQuestion = currentQuestionIndex === questions.length - 1;
 
+    // Parse options safely
+    let options: string[] = [];
+    if (currentQuestion.options) {
+        try {
+            options = JSON.parse(currentQuestion.options);
+        } catch (e) {
+            console.error("Failed to parse options", e);
+            options = [];
+        }
+    }
+
     const handleOptionSelect = (option: string) => {
-        if (isSubmitted && mode === "practice") return;
-        setSelectedAnswer(option);
+        if (!isSubmitted) {
+            setSelectedAnswer(option);
+        }
     };
 
     const handleSubmit = () => {
-        if (!selectedAnswer) return;
-
-        if (mode === "practice") {
-            const isCorrect = selectedAnswer === currentQuestion.correctAnswer;
-            if (isCorrect) {
-                setScore(score + 1);
-            }
-            setIsSubmitted(true);
-        } else {
-            // Exam mode: just save answer and go next
-            setExamAnswers({ ...examAnswers, [currentQuestion.id]: selectedAnswer });
-            handleNext();
+        setIsSubmitted(true);
+        if (selectedAnswer === currentQuestion.correctAnswer) {
+            setScore(score + 1);
         }
-    };
-
-    const finishExam = () => {
-        let finalScore = score;
-        if (mode === "exam") {
-            // Calculate score based on stored answers
-            // Note: The last question's answer is in selectedAnswer if we clicked "Finish"
-            const allAnswers = { ...examAnswers };
-            if (selectedAnswer && currentQuestion) {
-                allAnswers[currentQuestion.id] = selectedAnswer;
-            }
-
-            finalScore = questions.reduce((acc, q) => {
-                return acc + (allAnswers[q.id] === q.correctAnswer ? 1 : 0);
-            }, 0);
-            setScore(finalScore);
-        }
-        setShowResult(true);
+        setShowExplanation(true);
     };
 
     const handleNext = () => {
         if (isLastQuestion) {
-            finishExam();
+            // In practice mode, maybe show a summary?
+            alert(`Practice completed! You got ${score + (selectedAnswer === currentQuestion.correctAnswer ? 1 : 0)} correct.`);
         } else {
             setCurrentQuestionIndex(currentQuestionIndex + 1);
-            setSelectedAnswer(null);
-            setIsSubmitted(false);
-            setShowExplanation(false);
-            setShowNavigator(false);
         }
     };
 
-    const handleRetry = () => {
-        setCurrentQuestionIndex(0);
-        setSelectedAnswer(null);
-        setIsSubmitted(false);
-        setScore(0);
-        setShowResult(false);
-        setShowExplanation(false);
-        setShowNavigator(false);
-        setExamAnswers({}); // Reset exam answers for retry
+    const finishExam = () => {
+        // Calculate score
+        let finalScore = 0;
+        questions.forEach(q => {
+            if (examAnswers[q.id] === q.correctAnswer) {
+                finalScore++;
+            }
+        });
+        setIsExamFinished(true);
+        setScore(finalScore);
     };
 
-    if (questions.length === 0) {
-        return (
-            <div className="text-center py-20">
-                <h2 className="text-2xl font-bold text-gray-700">No questions available yet.</h2>
-                <Link href="/practice" className="text-blue-600 hover:underline mt-4 block">
-                    Back to Practice
-                </Link>
-            </div>
-        );
-    }
+    const handleJumpToQuestion = (index: number) => {
+        setCurrentQuestionIndex(index);
+        setShowNavigator(false);
+    };
 
-    if (showResult) {
+    if (isExamFinished) {
         return (
-            <div className="max-w-2xl mx-auto text-center py-10">
-                <div className="bg-white rounded-lg shadow-lg p-8">
-                    <h2 className="text-3xl font-bold mb-4">Quiz Completed!</h2>
-                    <div className="text-6xl font-bold text-blue-600 mb-4">
-                        {Math.round((score / questions.length) * 100)}%
-                    </div>
-                    <p className="text-xl text-gray-600 mb-8">
-                        You scored {score} out of {questions.length}
-                    </p>
-                    <div className="flex justify-center gap-4">
-                        <Link
-                            href="/practice"
-                            className="px-6 py-3 rounded-lg border border-gray-300 hover:bg-gray-50 font-medium"
-                        >
-                            Back to List
-                        </Link>
-                        <button
-                            onClick={handleRetry}
-                            className="px-6 py-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700 font-medium flex items-center"
-                        >
-                            <RefreshCcw className="w-4 h-4 mr-2" />
-                            Retry Quiz
-                        </button>
-                    </div>
+            <div className="text-center py-20 animate-slide-in">
+                <div className="inline-block p-6 rounded-full bg-retro-yellow/20 mb-6">
+                    <Trophy className="w-16 h-16 text-retro-yellow" />
                 </div>
+                <h2 className="text-4xl font-serif font-bold text-retro-ink mb-4">Exam Completed!</h2>
+                <p className="text-xl text-retro-ink/70 mb-8">
+                    You scored <span className="font-bold text-retro-red text-3xl">{score}</span> out of <span className="font-bold text-retro-ink text-3xl">{questions.length}</span>
+                </p>
+                <button
+                    onClick={() => window.location.reload()}
+                    className="px-8 py-3 bg-retro-ink text-white font-serif font-bold rounded-lg hover:bg-retro-ink/90 transition-all shadow-[4px_4px_0px_0px_rgba(201,78,56,1)] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_0px_rgba(201,78,56,1)]"
+                >
+                    Retake Exam
+                </button>
             </div>
         );
     }
-
-    const options = currentQuestion.options ? JSON.parse(currentQuestion.options) : [];
 
     return (
         <div className="max-w-3xl mx-auto">
-            <div className="mb-6">
-                <Link
-                    href="/practice"
-                    className="flex items-center text-sm text-gray-500 hover:text-gray-700 mb-4"
-                >
-                    <ChevronLeft className="h-4 w-4 mr-1" />
-                    Back to Practice
-                </Link>
-                <div className="flex justify-between items-center relative">
-                    <h1 className="text-2xl font-bold">{chapterTitle}</h1>
-                    <div className="flex items-center gap-2">
-                        <span className="text-sm font-medium bg-gray-100 px-3 py-1 rounded-full">
-                            Question {currentQuestionIndex + 1} / {questions.length}
-                        </span>
-                        <button
-                            onClick={() => setShowNavigator(!showNavigator)}
-                            className="p-2 hover:bg-gray-100 rounded-full transition"
-                            title="Jump to question"
-                        >
-                            <LayoutGrid className="w-5 h-5 text-gray-600" />
-                        </button>
-                    </div>
-
-                    {showNavigator && (
-                        <div className="absolute top-full right-0 mt-2 w-64 bg-white rounded-lg shadow-xl border p-4 z-10 grid grid-cols-5 gap-2">
-                            {questions.map((_, idx) => (
-                                <button
-                                    key={idx}
-                                    onClick={() => handleJumpToQuestion(idx)}
-                                    className={cn(
-                                        "w-8 h-8 rounded flex items-center justify-center text-sm font-medium transition",
-                                        currentQuestionIndex === idx
-                                            ? "bg-blue-600 text-white"
-                                            : "bg-gray-100 hover:bg-gray-200 text-gray-700"
-                                    )}
-                                >
-                                    {idx + 1}
-                                </button>
-                            ))}
-                        </div>
-                    )}
+            {/* Progress Bar / Header */}
+            <div className="mb-8 flex items-center justify-between">
+                <div className="flex items-center space-x-4">
+                    <span className="font-serif text-2xl font-bold text-retro-ink">Question {currentQuestionIndex + 1}</span>
+                    <span className="text-retro-ink/40 font-serif text-lg">of {questions.length}</span>
+                </div>
+                <div className="h-4 w-48 bg-retro-ink/10 rounded-full overflow-hidden border border-retro-ink/20">
+                    <div
+                        className="h-full bg-retro-yellow transition-all duration-500 ease-out"
+                        style={{ width: `${((currentQuestionIndex + 1) / questions.length) * 100}%` }}
+                    />
                 </div>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm border p-6 md:p-8">
-                <h2 className="text-2xl font-semibold text-gray-900 mb-6">{currentQuestion.content}</h2>
+            {/* Question Card */}
+            <div className="retro-card p-8 md:p-12 relative overflow-hidden group">
+                {/* Decorative corner stamp */}
+                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <Trophy className="w-24 h-24 rotate-12" />
+                </div>
 
-                <div className="space-y-3 mb-8">
+                <div className="mb-8">
+                    <span className={cn(
+                        "inline-block px-3 py-1 text-xs font-bold tracking-widest uppercase border-2 mb-4",
+                        currentQuestion.difficulty === "EASY" ? "border-retro-green text-retro-green" :
+                            currentQuestion.difficulty === "MEDIUM" ? "border-retro-yellow text-retro-yellow" :
+                                "border-retro-red text-retro-red"
+                    )}>
+                        {currentQuestion.difficulty}
+                    </span>
+                    <h2 className="text-3xl font-serif font-bold text-retro-ink leading-tight">{currentQuestion.content}</h2>
+                </div>
+
+                <div className="space-y-4 mb-8">
                     {currentQuestion.type === "MCQ" || currentQuestion.type === "TF" ? (
                         options.map((option: string, index: number) => {
                             const isSelected = selectedAnswer === option;
                             const isCorrect = option === currentQuestion.correctAnswer;
                             const label = String.fromCharCode(65 + index); // A, B, C, D...
 
-                            let buttonStyle = "border-gray-200 hover:border-blue-500 hover:bg-blue-50";
+                            let buttonStyle = "border-retro-ink/20 hover:border-retro-ink hover:bg-retro-bg";
                             if (isSubmitted && mode === "practice") {
                                 if (isCorrect) {
-                                    buttonStyle = "border-green-500 bg-green-50 text-green-700";
+                                    buttonStyle = "border-retro-green bg-retro-green/10 text-retro-green ring-2 ring-retro-green ring-offset-2";
                                 } else if (isSelected && !isCorrect) {
-                                    buttonStyle = "border-red-500 bg-red-50 text-red-700";
+                                    buttonStyle = "border-retro-red bg-retro-red/10 text-retro-red opacity-80";
                                 } else {
-                                    buttonStyle = "border-gray-200 opacity-50";
+                                    buttonStyle = "border-retro-ink/10 opacity-40";
                                 }
                             } else if (isSelected) {
-                                buttonStyle = "border-blue-500 bg-blue-50 ring-1 ring-blue-500";
+                                buttonStyle = "border-retro-blue bg-retro-blue text-white shadow-[4px_4px_0px_0px_rgba(44,62,80,1)] translate-x-[-2px] translate-y-[-2px]";
                             }
 
                             return (
@@ -226,25 +171,28 @@ export const QuizClient = ({ chapterTitle, questions, mode = "practice" }: QuizC
                                     onClick={() => handleOptionSelect(option)}
                                     disabled={isSubmitted && mode === "practice"}
                                     className={cn(
-                                        "w-full text-left p-4 rounded-lg border-2 transition-all duration-200 flex items-center",
+                                        "w-full text-left p-5 rounded-lg border-2 transition-all duration-200 flex items-center group/btn relative overflow-hidden",
                                         buttonStyle
                                     )}
                                 >
-                                    <span className="w-8 h-8 rounded-full bg-white border border-gray-300 flex items-center justify-center mr-4 font-bold text-gray-600 shrink-0">
+                                    <span className={cn(
+                                        "w-8 h-8 rounded-full border-2 flex items-center justify-center mr-4 font-bold font-serif shrink-0 transition-colors",
+                                        isSelected ? "bg-white text-retro-blue border-white" : "bg-transparent border-retro-ink/30 text-retro-ink/60 group-hover/btn:border-retro-ink group-hover/btn:text-retro-ink"
+                                    )}>
                                         {label}
                                     </span>
-                                    <span className="flex-1">{option}</span>
-                                    {isSubmitted && mode === "practice" && isCorrect && <CheckCircle className="w-5 h-5 text-green-600 ml-2" />}
-                                    {isSubmitted && mode === "practice" && isSelected && !isCorrect && <XCircle className="w-5 h-5 text-red-600 ml-2" />}
+                                    <span className="flex-1 font-medium text-lg">{option}</span>
+                                    {isSubmitted && mode === "practice" && isCorrect && <CheckCircle className="w-6 h-6 text-retro-green ml-2" />}
+                                    {isSubmitted && mode === "practice" && isSelected && !isCorrect && <XCircle className="w-6 h-6 text-retro-red ml-2" />}
                                 </button>
                             );
                         })
                     ) : (
-                        <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                        <div className="p-6 bg-retro-bg rounded-lg border-2 border-retro-ink/20 focus-within:border-retro-blue focus-within:ring-1 focus-within:ring-retro-blue transition-all">
                             <input
                                 type="text"
                                 placeholder="Type your answer here..."
-                                className="w-full bg-transparent outline-none"
+                                className="w-full bg-transparent outline-none font-serif text-xl text-retro-ink placeholder:text-retro-ink/30"
                                 value={selectedAnswer || ""}
                                 onChange={(e) => !isSubmitted && setSelectedAnswer(e.target.value)}
                                 disabled={isSubmitted && mode === "practice"}
@@ -256,37 +204,39 @@ export const QuizClient = ({ chapterTitle, questions, mode = "practice" }: QuizC
                 <div className="mb-6">
                     <button
                         onClick={() => setShowExplanation(!showExplanation)}
-                        className="text-blue-600 hover:text-blue-800 font-medium text-sm flex items-center focus:outline-none"
+                        className="text-retro-blue hover:text-retro-ink font-serif italic text-sm flex items-center focus:outline-none group"
                     >
-                        {showExplanation ? "Hide Explanation" : "Show Explanation"}
+                        <span className="border-b border-transparent group-hover:border-retro-ink transition-all">
+                            {showExplanation ? "Hide Explanation" : "Show Explanation"}
+                        </span>
                     </button>
 
                     {showExplanation && (
-                        <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-100 animate-in fade-in slide-in-from-top-2">
-                            <h4 className="font-semibold text-blue-900 mb-1">Explanation</h4>
-                            <p className="text-blue-800 text-sm">{currentQuestion.explanation}</p>
-                            <p className="text-blue-800 text-sm mt-2 font-bold">Correct Answer: {currentQuestion.correctAnswer}</p>
+                        <div className="mt-6 p-6 bg-retro-yellow/10 border-l-4 border-retro-yellow animate-slide-in">
+                            <h4 className="font-serif font-bold text-retro-ink mb-2 text-lg">Explanation</h4>
+                            <p className="text-retro-ink/80 leading-relaxed">{currentQuestion.explanation}</p>
+                            <p className="text-retro-ink font-bold mt-4 font-serif">Correct Answer: {currentQuestion.correctAnswer}</p>
                         </div>
                     )}
                 </div>
 
-                <div className="flex justify-end">
+                <div className="flex justify-end pt-6 border-t-2 border-retro-ink/5">
                     {mode === "practice" ? (
                         !isSubmitted ? (
                             <button
                                 onClick={handleSubmit}
                                 disabled={!selectedAnswer}
-                                className="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                                className="px-8 py-3 bg-retro-ink text-white font-serif font-bold rounded-lg hover:bg-retro-ink/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-[4px_4px_0px_0px_rgba(201,78,56,1)] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_0px_rgba(201,78,56,1)] active:translate-y-[0px] active:shadow-[2px_2px_0px_0px_rgba(201,78,56,1)]"
                             >
                                 Submit Answer
                             </button>
                         ) : (
                             <button
                                 onClick={handleNext}
-                                className="px-6 py-2 bg-gray-900 text-white rounded-lg font-medium hover:bg-gray-800 transition flex items-center"
+                                className="px-8 py-3 bg-retro-red text-white font-serif font-bold rounded-lg hover:bg-retro-red/90 transition-all flex items-center shadow-[4px_4px_0px_0px_rgba(45,42,38,1)] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_0px_rgba(45,42,38,1)]"
                             >
                                 {isLastQuestion ? "Finish Quiz" : "Next Question"}
-                                <ArrowRight className="w-4 h-4 ml-2" />
+                                <ArrowRight className="w-5 h-5 ml-2" />
                             </button>
                         )
                     ) : (
@@ -301,15 +251,14 @@ export const QuizClient = ({ chapterTitle, questions, mode = "practice" }: QuizC
                                 }
                             }}
                             disabled={!selectedAnswer}
-                            className="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition flex items-center"
+                            className="px-8 py-3 bg-retro-blue text-white font-serif font-bold rounded-lg hover:bg-retro-blue/90 transition-all flex items-center shadow-[4px_4px_0px_0px_rgba(45,42,38,1)] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_0px_rgba(45,42,38,1)]"
                         >
                             {isLastQuestion ? "Finish Exam" : "Next Question"}
-                            <ArrowRight className="w-4 h-4 ml-2" />
+                            <ArrowRight className="w-5 h-5 ml-2" />
                         </button>
                     )}
                 </div>
             </div>
         </div>
     );
-};
-
+}
