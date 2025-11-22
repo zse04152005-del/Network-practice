@@ -16,32 +16,27 @@ export default function Home() {
         {/* Hero Image Container with Floating Widgets */}
         <div className="relative w-full max-w-4xl mx-auto flex justify-center items-center h-[400px]">
 
-          {/* Left Floating Widget - Retro Terminal */}
-          <div className="absolute left-0 md:left-10 top-1/4 hidden md:block animate-float" style={{ animationDelay: '1s' }}>
-            <div className="bg-retro-ink text-retro-bg p-4 rounded-lg border-2 border-retro-accent shadow-[4px_4px_0px_0px_rgba(212,163,115,1)] w-48 text-left">
-              <div className="flex gap-2 mb-2">
-                <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                <div className="w-3 h-3 rounded-full bg-green-500"></div>
-              </div>
-              <div className="font-mono text-xs space-y-1 opacity-80">
-                <p>&gt; System: Online</p>
-                <p>&gt; Port: 8080 [OPEN]</p>
-                <p>&gt; Gear: 5th</p>
-              </div>
+          {/* Left Floating Decoration - Chopper */}
+          <div className="absolute left-4 md:left-20 top-1/3 hidden md:block animate-float" style={{ animationDelay: '1s' }}>
+            <div className="relative w-32 h-32 hover:scale-110 transition-transform duration-300 cursor-pointer">
+              <Image
+                src="/chopper.png"
+                alt="Tony Tony Chopper"
+                fill
+                className="object-contain drop-shadow-lg"
+              />
             </div>
           </div>
 
-          {/* Right Floating Widget - Protocol Badge */}
-          <div className="absolute right-0 md:right-10 top-1/3 hidden md:block animate-float" style={{ animationDelay: '2s' }}>
-            <div className="bg-retro-bg text-retro-ink p-4 rounded-lg border-2 border-retro-blue shadow-[4px_4px_0px_0px_rgba(44,62,80,1)] w-40 rotate-3">
-              <div className="text-center">
-                <div className="font-serif font-bold text-retro-blue text-xl mb-1">TCP/IP</div>
-                <div className="h-1 w-full bg-retro-blue/20 rounded-full overflow-hidden">
-                  <div className="h-full bg-retro-blue w-2/3 animate-pulse"></div>
-                </div>
-                <p className="text-xs mt-2 font-mono">Transferring...</p>
-              </div>
+          {/* Right Floating Decoration - Devil Fruit */}
+          <div className="absolute right-4 md:right-20 top-1/4 hidden md:block animate-float" style={{ animationDelay: '2s' }}>
+            <div className="relative w-28 h-28 hover:rotate-12 transition-transform duration-300 cursor-pointer">
+              <Image
+                src="/devil-fruit.png"
+                alt="Gum-Gum Fruit"
+                fill
+                className="object-contain drop-shadow-lg"
+              />
             </div>
           </div>
 
