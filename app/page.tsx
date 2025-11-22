@@ -1,35 +1,36 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, BookOpen, GraduationCap, Trophy } from "lucide-react";
 
 export default function Home() {
   return (
     <div className="min-h-screen p-8 md:p-12 max-w-7xl mx-auto space-y-16 relative overflow-hidden">
-      {/* Meteor Shower Background */}
-      <div className="meteor-shower">
-        {[...Array(10)].map((_, i) => (
-          <div
-            key={i}
-            className="meteor"
-            style={{
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 5}s`,
-              animationDuration: `${Math.random() * 3 + 2}s`,
-              width: `${Math.random() * 100 + 50}px`
-            }}
-          ></div>
-        ))}
-      </div>
 
       {/* Hero Section */}
       <section className="relative py-20 md:py-32 flex flex-col items-center text-center space-y-8 animate-slide-in">
+        {/* Nebula Energy Effect - Localized above title */}
+        <div className="nebula-container">
+          <div className="energy-stream"></div>
+        </div>
+
+        {/* Luffy Gear 5 Image */}
+        <div className="relative w-64 h-64 md:w-80 md:h-80 -mb-12 animate-float z-20">
+          <Image
+            src="/luffy-gear5.png"
+            alt="Luffy Gear 5"
+            fill
+            className="object-contain drop-shadow-[0_0_30px_rgba(255,255,255,0.6)]"
+            priority
+          />
+        </div>
+
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-retro-yellow rounded-full blur-[100px] opacity-20 -z-10 animate-float"></div>
 
-        <div className="inline-block border-b-2 border-retro-red pb-1 mb-4">
+        <div className="inline-block border-b-2 border-retro-red pb-1 mb-4 relative z-20">
           <span className="font-serif italic text-retro-red text-xl">Est. 2024</span>
         </div>
 
-        <h1 className="text-6xl md:text-8xl font-serif font-bold text-retro-ink leading-tight tracking-tight relative z-10">
+        <h1 className="text-6xl md:text-8xl font-serif font-bold text-retro-ink leading-tight tracking-tight relative z-20">
           Master the <br />
           <span className="text-retro-blue relative inline-block">
             Network
