@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
-import { QuizClient } from "@/components/QuizClient";
+import QuizClient from "@/components/QuizClient";
 
 interface PracticeChapterPageProps {
     params: Promise<{
@@ -34,7 +34,7 @@ export default async function PracticeChapterPage({
 
     return (
         <div className="p-6">
-            <QuizClient chapterTitle={chapter.title} questions={questions} />
+            return <QuizClient questions={questions as any} mode="practice" />;
         </div>
     );
 }

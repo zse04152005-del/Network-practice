@@ -1,5 +1,5 @@
 import { db } from "@/lib/db";
-import { QuizClient } from "@/components/QuizClient";
+import QuizClient from "@/components/QuizClient";
 
 export const dynamic = "force-dynamic";
 
@@ -24,7 +24,7 @@ export default async function ExamPage() {
                 </p>
             </div>
 
-            <QuizClient chapterTitle="Full Syllabus Mock Exam" questions={questions} mode="exam" />
+            <QuizClient questions={allQuestions as any} mode="exam" />
         </div>
     );
 }
