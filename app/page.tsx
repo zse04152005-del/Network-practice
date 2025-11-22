@@ -3,7 +3,24 @@ import { ArrowRight, BookOpen, GraduationCap, Trophy } from "lucide-react";
 
 export default function Home() {
   return (
-    <div className="min-h-screen p-8 md:p-12 max-w-7xl mx-auto space-y-16">
+    <div className="min-h-screen p-8 md:p-12 max-w-7xl mx-auto space-y-16 relative overflow-hidden">
+      {/* Meteor Shower Background */}
+      <div className="meteor-shower">
+        {[...Array(10)].map((_, i) => (
+          <div
+            key={i}
+            className="meteor"
+            style={{
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 5}s`,
+              animationDuration: `${Math.random() * 3 + 2}s`,
+              width: `${Math.random() * 100 + 50}px`
+            }}
+          ></div>
+        ))}
+      </div>
+
       {/* Hero Section */}
       <section className="relative py-20 md:py-32 flex flex-col items-center text-center space-y-8 animate-slide-in">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-retro-yellow rounded-full blur-[100px] opacity-20 -z-10 animate-float"></div>
@@ -12,7 +29,7 @@ export default function Home() {
           <span className="font-serif italic text-retro-red text-xl">Est. 2024</span>
         </div>
 
-        <h1 className="text-6xl md:text-8xl font-serif font-bold text-retro-ink leading-tight tracking-tight">
+        <h1 className="text-6xl md:text-8xl font-serif font-bold text-retro-ink leading-tight tracking-tight relative z-10">
           Master the <br />
           <span className="text-retro-blue relative inline-block">
             Network
@@ -22,11 +39,11 @@ export default function Home() {
           </span>
         </h1>
 
-        <p className="text-xl md:text-2xl text-retro-ink/80 max-w-2xl font-sans leading-relaxed">
+        <p className="text-xl md:text-2xl text-retro-ink/80 max-w-2xl font-sans leading-relaxed relative z-10">
           Embark on a journey through the layers of the internet. From physical cables to application protocols.
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-6 pt-8">
+        <div className="flex flex-col sm:flex-row gap-6 pt-8 relative z-10">
           <Link href="/learn" className="group relative inline-flex items-center justify-center px-8 py-4 font-bold text-white transition-all duration-200 bg-retro-red font-serif rounded-lg hover:bg-retro-red/90 focus:outline-none ring-offset-2 focus:ring-2 ring-retro-red retro-border">
             Start Learning
             <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -38,7 +55,7 @@ export default function Home() {
       </section>
 
       {/* Features Grid */}
-      <section className="grid md:grid-cols-3 gap-8">
+      <section className="grid md:grid-cols-3 gap-8 relative z-10">
         {[
           {
             title: "Structured Learning",
@@ -84,7 +101,7 @@ export default function Home() {
       </section>
 
       {/* Footer / Quote */}
-      <section className="py-16 text-center border-t-2 border-retro-ink/10">
+      <section className="py-16 text-center border-t-2 border-retro-ink/10 relative z-10">
         <blockquote className="font-serif text-3xl md:text-4xl italic text-retro-ink/60">
           "The internet is the first thing that humanity has built that humanity doesn't understand, the largest experiment in anarchy that we have ever had."
         </blockquote>

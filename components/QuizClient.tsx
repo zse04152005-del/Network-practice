@@ -113,16 +113,47 @@ export default function QuizClient({ questions, mode }: QuizClientProps) {
     return (
         <div className="max-w-3xl mx-auto">
             {/* Progress Bar / Header */}
-            <div className="mb-8 flex items-center justify-between">
+            <div className="mb-8 flex items-center justify-between relative z-20">
                 <div className="flex items-center space-x-4">
                     <span className="font-serif text-2xl font-bold text-retro-ink">Question {currentQuestionIndex + 1}</span>
                     <span className="text-retro-ink/40 font-serif text-lg">of {questions.length}</span>
                 </div>
-                <div className="h-4 w-48 bg-retro-ink/10 rounded-full overflow-hidden border border-retro-ink/20">
-                    <div
-                        className="h-full bg-retro-yellow transition-all duration-500 ease-out"
-                        style={{ width: `${((currentQuestionIndex + 1) / questions.length) * 100}%` }}
-                    />
+
+                <div className="flex items-center gap-4">
+                    <div className="hidden md:block h-4 w-48 bg-retro-ink/10 rounded-full overflow-hidden border border-retro-ink/20">
+                        <div
+                            className="h-full bg-retro-yellow transition-all duration-500 ease-out"
+                            style={{ width: `${((currentQuestionIndex + 1) / questions.length) * 100}%` }}
+                        />
+                    </div>
+
+                    <div className="relative">
+                        <button
+                            onClick={() => setShowNavigator(!showNavigator)}
+                            className="p-2 border-2 border-retro-ink rounded-lg hover:bg-retro-ink hover:text-white transition-colors"
+                        >
+                            <span className="font-serif font-bold text-sm">NAV</span>
+                        </button>
+
+                        {showNavigator && (
+                            <div className="absolute top-full right-0 mt-2 w-72 bg-retro-bg border-2 border-retro-ink rounded-xl shadow-[4px_4px_0px_0px_rgba(45,42,38,1)] p-4 z-50 grid grid-cols-5 gap-2 max-h-64 overflow-y-auto">
+                                {questions.map((_, idx) => (
+                                    <button
+                                        key={idx}
+                                        onClick={() => handleJumpToQuestion(idx)}
+                                        className={cn(
+                                            "w-10 h-10 rounded-lg border-2 flex items-center justify-center font-serif font-bold text-sm transition-all hover:-translate-y-1",
+                                            currentQuestionIndex === idx
+                                                ? "bg-retro-blue text-white border-retro-blue"
+                                                : "bg-white border-retro-ink/20 text-retro-ink hover:border-retro-ink"
+                                        )}
+                                    >
+                                        {idx + 1}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
 
