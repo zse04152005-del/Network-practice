@@ -7,38 +7,75 @@ export default function Home() {
     <div className="min-h-screen p-8 md:p-12 max-w-7xl mx-auto space-y-16 relative overflow-hidden">
 
       {/* Hero Section */}
-      <section className="relative py-20 md:py-32 flex flex-col items-center text-center space-y-8 animate-slide-in">
+      <section className="relative py-20 md:py-32 flex flex-col items-center text-center space-y-8 animate-slide-in w-full">
         {/* Nebula Energy Effect - Localized above title */}
         <div className="nebula-container">
           <div className="energy-stream"></div>
         </div>
 
-        {/* Luffy Gear 5 Image */}
-        <div className="relative w-64 h-64 md:w-80 md:h-80 -mb-12 animate-float z-20">
-          <Image
-            src="/luffy-gear5.png"
-            alt="Luffy Gear 5"
-            fill
-            className="object-contain drop-shadow-[0_0_30px_rgba(255,255,255,0.6)]"
-            priority
-          />
+        {/* Hero Image Container with Floating Widgets */}
+        <div className="relative w-full max-w-4xl mx-auto flex justify-center items-center h-[400px]">
+
+          {/* Left Floating Widget - Retro Terminal */}
+          <div className="absolute left-0 md:left-10 top-1/4 hidden md:block animate-float" style={{ animationDelay: '1s' }}>
+            <div className="bg-retro-ink text-retro-bg p-4 rounded-lg border-2 border-retro-accent shadow-[4px_4px_0px_0px_rgba(212,163,115,1)] w-48 text-left">
+              <div className="flex gap-2 mb-2">
+                <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                <div className="w-3 h-3 rounded-full bg-green-500"></div>
+              </div>
+              <div className="font-mono text-xs space-y-1 opacity-80">
+                <p>&gt; System: Online</p>
+                <p>&gt; Port: 8080 [OPEN]</p>
+                <p>&gt; Gear: 5th</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Floating Widget - Protocol Badge */}
+          <div className="absolute right-0 md:right-10 top-1/3 hidden md:block animate-float" style={{ animationDelay: '2s' }}>
+            <div className="bg-retro-bg text-retro-ink p-4 rounded-lg border-2 border-retro-blue shadow-[4px_4px_0px_0px_rgba(44,62,80,1)] w-40 rotate-3">
+              <div className="text-center">
+                <div className="font-serif font-bold text-retro-blue text-xl mb-1">TCP/IP</div>
+                <div className="h-1 w-full bg-retro-blue/20 rounded-full overflow-hidden">
+                  <div className="h-full bg-retro-blue w-2/3 animate-pulse"></div>
+                </div>
+                <p className="text-xs mt-2 font-mono">Transferring...</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Background Decorative Circle */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] border-2 border-dashed border-retro-ink/10 rounded-full animate-[spin_60s_linear_infinite] -z-10"></div>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] border border-retro-ink/5 rounded-full -z-10"></div>
+
+          {/* Luffy Gear 5 Image */}
+          <div className="relative w-80 h-80 md:w-96 md:h-96 animate-float z-20">
+            <Image
+              src="/luffy-gear5.png"
+              alt="Luffy Gear 5"
+              fill
+              className="object-contain drop-shadow-[0_0_30px_rgba(255,255,255,0.6)]"
+              priority
+            />
+          </div>
         </div>
 
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-retro-yellow rounded-full blur-[100px] opacity-20 -z-10 animate-float"></div>
+        <div className="relative z-20 -mt-12">
+          <div className="inline-block border-b-2 border-retro-red pb-1 mb-4">
+            <span className="font-serif italic text-retro-red text-xl">Est. 2024</span>
+          </div>
 
-        <div className="inline-block border-b-2 border-retro-red pb-1 mb-4 relative z-20">
-          <span className="font-serif italic text-retro-red text-xl">Est. 2024</span>
+          <h1 className="text-6xl md:text-8xl font-serif font-bold text-retro-ink leading-tight tracking-tight">
+            Computer <br />
+            <span className="text-retro-blue relative inline-block">
+              Network
+              <svg className="absolute w-full h-3 -bottom-1 left-0 text-retro-yellow opacity-60" viewBox="0 0 100 10" preserveAspectRatio="none">
+                <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="8" fill="none" />
+              </svg>
+            </span>
+          </h1>
         </div>
-
-        <h1 className="text-6xl md:text-8xl font-serif font-bold text-retro-ink leading-tight tracking-tight relative z-20">
-          Master the <br />
-          <span className="text-retro-blue relative inline-block">
-            Network
-            <svg className="absolute w-full h-3 -bottom-1 left-0 text-retro-yellow opacity-60" viewBox="0 0 100 10" preserveAspectRatio="none">
-              <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="8" fill="none" />
-            </svg>
-          </span>
-        </h1>
 
         <p className="text-xl md:text-2xl text-retro-ink/80 max-w-2xl font-sans leading-relaxed relative z-10">
           Embark on a journey through the layers of the internet. From physical cables to application protocols.
