@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import Link from "next/link";
-import { ArrowRight, ExternalLink, Book } from "lucide-react";
+import Image from "next/image";
+import { ArrowRight, ExternalLink, Book, BookOpen } from "lucide-react";
 
 export default async function LearnPage() {
     const chapters = await db.chapter.findMany({
